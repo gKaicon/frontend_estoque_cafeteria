@@ -1,0 +1,23 @@
+{
+  "name": "estoque_cafeteria",
+  "version": "1.0.0",
+  "description": "Trabalho acadêmico de controle de estoque de uma cafeteria",
+  "scripts": {
+    "dev": "concurrently \"npm:dev-backend\" \"npm:dev-frontend\"",
+    "dev-backend": "cd backend && php artisan serve",
+    "dev-frontend": "cd frontend && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gKaicon/estoque_cafeteria.git"
+  },
+  "author": "Gabriel Kaicon, Joao Vitor Mendes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gKaicon/estoque_cafeteria/issues"
+  },
+  "homepage": "https://github.com/gKaicon/estoque_cafeteria#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
