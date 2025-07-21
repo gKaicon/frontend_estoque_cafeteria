@@ -1,4 +1,3 @@
-// app/sells/[id]/page.tsx
 import SellForm from '@/components/SellForm';
 import api from '@/services/api';
 import { Sell } from '@/lib/types';

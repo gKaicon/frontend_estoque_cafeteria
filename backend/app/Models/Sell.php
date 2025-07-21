@@ -8,5 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Sell extends Model
 {
     protected $fillable = ['total_value', 'sale_date'];
-    public function itens(): HasMany { return $this->hasMany(ItemSell::class);}
+    public function itens(): HasMany
+    {
+        return $this->hasMany(ItemSell::class);
+    }
 }

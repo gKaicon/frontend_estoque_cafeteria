@@ -1,10 +1,9 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-// 1. Importe o componente Navbar que acabamos de criar
 import Navbar from "@/components/NavBar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${inter.className} bg-gray-50`}>
-        {/* 2. Adicione a Navbar aqui, antes do {children} */}
+      <body className={`${inter.className} bg-gray-50`} style={{ backgroundImage: "url('/bg.jpg')", backgroundSize: "cover"}}>
         <Navbar />
-        
-        {/* O conteúdo de cada página será renderizado aqui */}
-        <main>
+        <main className="min-h-screen">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );

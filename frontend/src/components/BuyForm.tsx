@@ -3,20 +3,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/services/api';
-import { Product, ItemSell, Sell } from '@/lib/types';
+import { Product, ItemBuy, Buy } from '@/lib/types';
 import { Metadata } from 'next/types';
 
-interface SellFormProps {
-  sellToEdit?: Sell;
+interface BuyFormProps {
+  buyToEdit?: Buy; 
 }
 
 export const metadata: Metadata = {
-  title: "Carrinho - Vendas"
+  title: "Carrinho - Compras"
 }
 
-export default function SellForm({ sellToEdit }: SellFormProps) {
+export default function BuyForm({ buyToEdit }: BuyFormProps) {
   const [products, setProducts] = useState<Product[]>([]);
-  const [itens, setItens] = useState<ItemSell[]>(sellToEdit?.itens || []);
+  const [itens, setItens] = useState<ItemBuy[]>(buyToEdit?.itens || []);
 
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [amount, setQuantidade] = useState<number>(1);
@@ -36,7 +36,7 @@ export default function SellForm({ sellToEdit }: SellFormProps) {
 
     const itemExists = itens.find(item => item.product_id === produto.id);
     if (itemExists) {
-      toast.info('Este produto já foi adicionado.');
+      toast.error('Este produto já foi adicionado.');
       return;
     }
 
@@ -57,28 +57,28 @@ export default function SellForm({ sellToEdit }: SellFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (itens.length === 0) {
-      toast.info('Adicione pelo menos um item à venda.');
+      toast.info('Adicione pelo menos um item à compra.');
       return;
     }
 
-    const sellData = {
+    const buyData = {
       itens: itens.map(({ product_id, amount }) => ({ product_id, amount })),
     };
 
     try {
-      if (sellToEdit) {
-        await api.put(`/sells/${sellToEdit.id}`, sellData);
-        toast.success('Venda atualizada com sucesso!', {
+      if (buyToEdit) {
+        await api.put(`/buys/${buyToEdit.id}`, buyData);
+        toast.success('Compra atualizada com sucesso!', {
           onClose: () => {
-            router.push('/products');
+            router.push('/buys');
             router.refresh();
           },
         });
       } else {
-        await api.post('/sells', sellData);
-        toast.success('Venda criada com sucesso!', {
+        await api.post('/buys', buyData);
+        toast.success('Compra criada com sucesso!', {
           onClose: () => {
-            router.push('/products');
+            router.push('/buys');
             router.refresh();
           },
         });
@@ -86,7 +86,7 @@ export default function SellForm({ sellToEdit }: SellFormProps) {
     } catch (error: any) {
       console.error(error);
       const errorMessage = error.response?.data?.message || 'Ocorreu um erro.';
-      alert(`Erro: ${errorMessage}`);
+      toast.error(`Erro: ${errorMessage}`);
     }
   };
 
@@ -99,7 +99,6 @@ export default function SellForm({ sellToEdit }: SellFormProps) {
     <>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-b-lg text-gray-700">
-        {/* Seção para adicionar itens */}
         <div className="p-4 border rounded-lg space-y-4">
           <h2 className="text-xl font-semibold">Adicionar Produto</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -129,7 +128,7 @@ export default function SellForm({ sellToEdit }: SellFormProps) {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold mb-2">Itens da Venda</h2>
+          <h2 className="text-xl font-semibold mb-2">Itens da Compra</h2>
           <table className="min-w-full bg-white border rounded-2xl">
             <thead>
               <tr>
@@ -167,7 +166,7 @@ export default function SellForm({ sellToEdit }: SellFormProps) {
         </div>
 
         <button type="submit" className="w-full bg-green-500 text-white p-3 rounded hover:bg-green-600 font-bold">
-          {sellToEdit ? 'Atualizar Venda' : 'Finalizar Venda'}
+          {buyToEdit ? 'Atualizar Compra' : 'Finalizar Compra'}
         </button>
       </form>
     </>

@@ -1,9 +1,7 @@
-// src/app/produtos/[id]/editar/page.tsx
 import ProductForm from "@/components/ProductForm";
 import api from "@/services/api";
 import { Product } from "@/lib/types";
 
-// Função para buscar os dados do produto específico
 async function getProduct(id: string): Promise<Product | null> {
   try {
     const response = await api.get(`/products/${id}`);
@@ -15,7 +13,9 @@ async function getProduct(id: string): Promise<Product | null> {
 }
 
 export default async function UpdateProductPage({ params }: { params: { id: string } }) {
-  const produto = await getProduct(params.id);
+  const { id } = await params; 
+
+  const produto = await getProduct(id);
 
   if (!produto) {
     return (
@@ -27,11 +27,10 @@ export default async function UpdateProductPage({ params }: { params: { id: stri
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">
+      <h1 className="text-2xl font-bold text-center space-y-4 max-w-lg mx-auto bg-white rounded-t-lg text-gray-700 pt-4 mt-4">
         Editar Produto: {produto.name}
       </h1>
-      {/* Reutilizando o formulário no modo de edição */}
-      <ProductForm productToEdit={produto} />
+       <ProductForm productToEdit={produto} />
     </div>
   );
 }

@@ -11,19 +11,28 @@ use Exception;
 
 class SellController extends Controller
 {
-    public function index() { return Sell::with('itens.product')->orderBy('sale_date', 'desc')->get(); }
-    public function store(Request $request) {
+    public function index()
+    {
+        return Sell::with('itens.product')->orderBy('sale_date', 'desc')->get();
+    }
+
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'itens' => 'required|array|min:1',
             'itens.*.product_id' => 'required|exists:products,id',
             'itens.*.amount' => 'required|integer|min:1',
         ]);
-        if ($validator->fails()) { return response()->json($validator->errors(), 422); }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
         DB::beginTransaction();
         try {
             foreach ($request->itens as $itemData) {
                 $product = Product::find($itemData['product_id']);
-                if ($product->stock < $itemData['amount']) { throw new Exception("Estoque insuficiente para o product: {$product->name}"); }
+                if ($product->stock < $itemData['amount']) {
+                    throw new Exception("Estoque insuficiente para o product: {$product->name}");
+                }
             }
             $valorTotalSell = 0;
             foreach ($request->itens as $itemData) {
@@ -48,20 +57,32 @@ class SellController extends Controller
             return response()->json(['message' => 'Erro ao processar a venda', 'error' => $e->getMessage()], 500);
         }
     }
-    public function show(Sell $sell) { return $sell->load('itens.product'); }
-    public function update(Request $request, Sell $sell) {
+
+    public function show(Sell $sell)
+    {
+        return $sell->load('itens.product');
+    }
+
+    public function update(Request $request, Sell $sell)
+    {
         $validator = Validator::make($request->all(), [
             'itens' => 'required|array|min:1',
             'itens.*.product_id' => 'required|exists:products,id',
             'itens.*.amount' => 'required|integer|min:1',
         ]);
-        if ($validator->fails()) { return response()->json($validator->errors(), 422); }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
         DB::beginTransaction();
         try {
-            foreach ($sell->itens as $itemOriginal) { Product::find($itemOriginal->product_id)->increment('stock', $itemOriginal->amount); }
+            foreach ($sell->itens as $itemOriginal) {
+                Product::find($itemOriginal->product_id)->increment('stock', $itemOriginal->amount);
+            }
             foreach ($request->itens as $itemNovoData) {
                 $product = Product::find($itemNovoData['product_id']);
-                if ($product->stock < $itemNovoData['amount']) { throw new Exception("Estoque insuficiente para o product: {$product->name}"); }
+                if ($product->stock < $itemNovoData['amount']) {
+                    throw new Exception("Estoque insuficiente para o product: {$product->name}");
+                }
             }
             $novoValorTotal = 0;
             $sell->itens()->delete();
@@ -85,10 +106,14 @@ class SellController extends Controller
             return response()->json(['message' => 'Erro ao atualizar a venda', 'error' => $e->getMessage()], 500);
         }
     }
-    public function destroy(Sell $sell) {
+    
+    public function destroy(Sell $sell)
+    {
         DB::beginTransaction();
         try {
-            foreach ($sell->itens as $item) { Product::find($item->product_id)->increment('stock', $item->amount); }
+            foreach ($sell->itens as $item) {
+                Product::find($item->product_id)->increment('stock', $item->amount);
+            }
             $sell->delete();
             DB::commit();
             return response()->json(null, 204);
