@@ -1,25 +1,64 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 import api from '@/services/api';
 import { Product } from '@/lib/types';
+import { useAuth } from '@/context/AuthContext'; 
+
 import ProductActions from '@/components/ProductActions'; 
-import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Produtos',
-};
+export default function ProductsPage() {
 
-async function getProducts(): Promise<Product[]> {
-  try {
-    const response = await api.get('/products');
-    return response.data;
-  } catch (error) {
-    console.error("Falha ao buscar produtos:", error);
-    return []; 
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const router = useRouter();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+
+
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isAuthLoading, router]);
+
+
+  useEffect(() => {
+
+    if (isAuthenticated) {
+      const getProducts = async () => {
+        try {
+          const response = await api.get('/products');
+          setProducts(response.data);
+        } catch (err) {
+          console.error("Falha ao buscar produtos:", err);
+          setError("Não foi possível carregar os produtos. Tente novamente mais tarde.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      getProducts();
+    }
+  }, [isAuthenticated]); 
+
+
+  if (isAuthLoading || isLoading) {
+    return <p className="text-center p-10">Carregando...</p>;
   }
-}
 
-export default async function ProductsPage() {
-  const products = await getProducts();
+  if (!isAuthenticated) {
+    return null;
+  }
+  
+  if (error) {
+     return <p className="text-center text-red-500 p-10">{error}</p>;
+  }
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -48,7 +87,9 @@ export default async function ProductsPage() {
                   <td className="py-3 px-6 text-left font-medium">{product.name}</td>
                   <td className="py-3 px-6 text-right">R$ {Number(product.sale_price).toFixed(2)}</td>
                   <td className="py-3 px-6 text-center">{product.stock}</td>
-                  <ProductActions productId={product.id} />
+                  <td className="py-3 px-6 text-center">
+                     <ProductActions productId={product.id} />
+                  </td>
                 </tr>
               ))}
             </tbody>
