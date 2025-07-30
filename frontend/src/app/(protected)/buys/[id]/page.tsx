@@ -12,6 +12,8 @@ async function getBuy(id: string): Promise<Buy | null> {
 }
 
 export default async function UpdateBuyPage({ params }: { params: { id: string } }) {
+  console.log(params);
+  
   const buy = await getBuy(params.id);
 
   if (!buy) {

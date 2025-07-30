@@ -25,15 +25,13 @@ export default function ProductActions({ productId }: ProductActionsProps) {
   };
 
   return (
-    <td className="py-3 px-6 text-center">
-      <div className="flex item-center justify-center space-x-4">
-        <Link href={`/products/${productId}/update`} className="text-yellow-600 border border-yellow-600 hover:bg-yellow-900 hover:text-white p-2 rounded">
-          Editar
-        </Link>
-        <button onClick={handleDelete} className="text-red-600 border border-red-600 hover:border-red-900 hover:bg-red-900 hover:text-white p-2 rounded">
-          Excluir
-        </button>
-      </div>
-    </td>
+    <div className="flex item-center justify-center space-x-4">
+      <Link href={`/products/${productId}/update`} className="text-yellow-600 border border-yellow-600 hover:bg-yellow-900 hover:text-white p-2 rounded">
+        Editar
+      </Link>
+      <button onClick={handleDelete} className="text-red-600 border border-red-600 hover:border-red-900 hover:bg-red-900 hover:text-white p-2 rounded">
+        Excluir
+      </button>
+    </div>
   );
 }

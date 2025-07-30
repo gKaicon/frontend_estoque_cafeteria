@@ -18,13 +18,13 @@ export default function Navbar() {
         <div className="space-x-6">
           {isAuthenticated ? (
             <>
-              <Link href="/products" className="text-lg hover:text-gray-300 transition-colors">
+              <Link href="/products/" className="text-lg hover:text-gray-300 transition-colors">
                 Produtos
               </Link>
-              <Link href="/sells" className="text-lg hover:text-gray-300 transition-colors">
+              <Link href="/sells/" className="text-lg hover:text-gray-300 transition-colors">
                 Vendas
               </Link>
-              <Link href="/buys" className="text-lg hover:text-gray-300 transition-colors">
+              <Link href="/buys/" className="text-lg hover:text-gray-300 transition-colors">
                 Compras
               </Link>
               <Link href="/" className="text-lg hover:text-gray-300 transition-colors mr-2">
@@ -35,7 +35,7 @@ export default function Navbar() {
               </Link>
             </>
           ) : (
-            <Link href="/login" className="text-lg hover:text-gray-300 transition-colors">
+            <Link href="/login/" className="text-lg hover:text-gray-300 transition-colors">
               Login
             </Link>
           )}

@@ -1,69 +1,23 @@
-"use client"; // 1. Transforma o componente para rodar no cliente
-
+"use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
-import api from '@/services/api'; // O serviço de API para o cliente
-import { Sell } from '@/lib/types'; // O tipo da venda
-import { useAuth } from '@/context/AuthContext'; // Hook para autenticação
-
-// Metadados devem ser movidos para um layout.tsx ou página de servidor pai.
-// export const metadata: Metadata = { ... };
+import api from '@/services/api';
+import { Sell } from '@/lib/types';
 
 export default function SellsPage() {
-  // --- 2. Estados para dados, carregamento e erros ---
   const [sells, setSells] = useState<Sell[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
-  const router = useRouter();
-  // Pega o status da autenticação do nosso contexto global
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
-  // --- 3. Efeito para proteger a rota ---
-  useEffect(() => {
-    // Se a verificação de autenticação terminou e o usuário NÃO está logado...
-    if (!isAuthLoading && !isAuthenticated) {
-      router.push('/login'); // ...o mandamos para a tela de login.
+  const getSells = async () => {
+
+    try {
+      const response = await api.get('/sells');
+      setSells(response.data);
+    } catch (err) {
+      console.error("Falha ao buscar vendas:", err);
     }
-  }, [isAuthenticated, isAuthLoading, router]);
 
-  // --- 4. Efeito para buscar os dados da API ---
-  useEffect(() => {
-    // A busca só é acionada se o usuário estiver autenticado
-    if (isAuthenticated) {
-      const getSells = async () => {
-        setIsLoading(true);
-        try {
-          const response = await api.get('/sells');
-          setSells(response.data);
-        } catch (err) {
-          console.error("Falha ao buscar vendas:", err);
-          setError("Não foi possível carregar as vendas.");
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      
-      getSells();
-    }
-  }, [isAuthenticated]); // Roda o efeito quando o usuário for autenticado
-
-  // --- 5. Renderização condicional baseada nos estados ---
-  // Enquanto a autenticação ou os dados carregam, exibe uma mensagem
-  if (isAuthLoading || (isAuthenticated && isLoading)) {
-    return <p className="text-center p-10">Carregando informações de vendas...</p>;
-  }
-
-  // O useEffect acima já redireciona, mas isso evita a renderização do resto do componente
-  if (!isAuthenticated) {
-    return null;
-  }
-  
-  // Exibe uma mensagem de erro se a busca falhar
-  if (error) {
-     return <p className="text-center text-red-500 p-10">{error}</p>;
+    getSells();
   }
 
   return (
@@ -92,7 +46,7 @@ export default function SellsPage() {
                 <tr key={sell.id} className="border-b border-gray-200 hover:bg-gray-100">
                   <td className="py-3 px-6 text-left">{sell.id}</td>
                   <td className="py-3 px-6 text-left">
-                    {new Date(sell.sale_date).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}
+                    {new Date(sell.sale_date).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
                   </td>
                   <td className="py-3 px-6 text-left">
                     {sell.itens.map((item, idx) => (
