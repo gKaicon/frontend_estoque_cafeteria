@@ -1,6 +1,6 @@
-'use client'; 
+'use client';
 
-import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { createContext, useState, useEffect, useContext, ReactNode, useCallback } from 'react'; 
 import { useRouter } from 'next/navigation';
 import api from '@/services/api';
 
@@ -28,6 +28,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  const logout = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem('authToken');
+    router.push('/login');
+  }, [router]);
+
   useEffect(() => {
     const checkUser = async () => {
       const token = localStorage.getItem('authToken');
@@ -42,9 +48,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       setIsLoading(false);
     };
-
     checkUser();
-  }, []);
+  }, [logout]);
 
   const login = async (token: string) => {
     localStorage.setItem('authToken', token);
@@ -55,12 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error("Falha ao buscar dados do usuário após o login", error);
     }
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('authToken');
-    router.push('/login');
   };
 
   const isAuthenticated = !!user;
