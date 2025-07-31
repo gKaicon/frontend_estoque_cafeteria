@@ -8,17 +8,17 @@ import { Sell } from '@/lib/types';
 export default function SellsPage() {
   const [sells, setSells] = useState<Sell[]>([]);
 
-  const getSells = async () => {
-
-    try {
-      const response = await api.get('/sells');
-      setSells(response.data);
-    } catch (err) {
-      console.error("Falha ao buscar vendas:", err);
-    }
-
+  useEffect(() => {
+    const getSells = async () => {
+      try {
+        const response = await api.get('/sells');
+        setSells(response.data);
+      } catch (err) {
+        console.error("Falha ao buscar vendas:", err);
+      }
+    };
     getSells();
-  }
+  }, []);
 
   return (
     <div className="container mx-auto p-4">

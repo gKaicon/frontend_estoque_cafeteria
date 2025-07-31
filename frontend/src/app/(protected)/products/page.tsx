@@ -12,17 +12,19 @@ export default function ProductsPage() {
 
   const [products, setProducts] = useState<Product[]>([]);
 
-  const getProducts = async () => {
-    try {
-      const response = await api.get('/products');
-      setProducts(response.data);
-    } catch (err) {
-      console.error("Falha ao buscar produtos:", err);
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const response = await api.get('/products');
+        setProducts(response.data);
+      } catch (err) {
+        console.error("Falha ao buscar produtos:", err);
 
-    }
-  };
+      }
+    };
+    getProducts();
+  }, []);
 
-  getProducts();
 
   return (
     <>

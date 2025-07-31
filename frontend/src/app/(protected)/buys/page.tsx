@@ -1,4 +1,4 @@
-"use client"; // 1. DIRETIVA PARA TRANSFORMAR EM CLIENTE
+"use client";
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -10,18 +10,17 @@ export default function BuysPage() {
 
   const [buys, setBuys] = useState<Buy[]>([]);
 
-  const getBuys = async () => {
-
-    try {
-      const response = await api.get('/buys');
-      setBuys(response.data);
-    } catch (err) {
-      console.error("Falha ao buscar compras:", err);
-
-    }
-  };
-
-  getBuys();
+  useEffect(() => {
+    const getBuys = async () => {
+      try {
+        const response = await api.get('/buys');
+        setBuys(response.data);
+      } catch (err) {
+        console.error("Falha ao buscar compras:", err);
+      }
+    };
+    getBuys();
+  }, []);  
 
   return (
     <div className="container mx-auto p-4">
