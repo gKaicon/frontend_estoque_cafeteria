@@ -1,23 +1,28 @@
 {
-  "name": "estoque_cafeteria",
-  "version": "1.0.0",
-  "description": "Trabalho acadêmico de controle de estoque de uma cafeteria",
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "concurrently \"npm:dev-backend\" \"npm:dev-frontend\"",
-    "dev-backend": "cd backend && php artisan serve",
-    "dev-frontend": "cd frontend && npm run dev"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gKaicon/estoque_cafeteria.git"
+  "dependencies": {
+    "axios": "^1.10.0",
+    "next": "^14.2.31",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-toastify": "^11.0.5"
   },
-  "author": "Gabriel Kaicon, Joao Vitor Mendes",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/gKaicon/estoque_cafeteria/issues"
-  },
-  "homepage": "https://github.com/gKaicon/estoque_cafeteria#readme",
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "24.0.14",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.1",
+    "tailwindcss": "^4"
   }
 }
