@@ -1,4 +1,6 @@
 'use client';
+import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 import api from '@/services/api';
 
@@ -8,102 +10,112 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-
+    const router = useRouter();
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-
         try {
-            const response = await api.post('/register', {name, email, password });
+            const response = await api.post('/register', { name, email, password });
+            if (response.status === 201) {
+                router.push('/login');
+                router.refresh();
+            }
+            else {
+                console.error('Erro ao registrar usuário:', response.data);
+            }
         } catch (err: any) {
+            toast.error('Erro ao registrar usuário.');
             console.error(err);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center ">
-            <div className="w-full max-w-md p-8 space-y-6 rounded-lg shadow-md bg-white text-black">
-                <h1 className="text-2xl font-bold text-center">
-                    Registrar sua Conta
-                </h1>
+        <>
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
+            <div className="min-h-screen flex items-center justify-center ">
+                <div className="w-full max-w-md p-8 space-y-6 rounded-lg shadow-md bg-white text-black">
+                    <h1 className="text-2xl font-bold text-center">
+                        Registrar sua Conta
+                    </h1>
 
-                <form className="space-y-6" onSubmit={handleSubmit}>
+                    <form className="space-y-6" onSubmit={handleSubmit}>
 
-                    <div>
-                        <label
-                            htmlFor="name"
-                            className="block mb-2 text-sm font-medium text-black "
-                        >
-                            Email
-                        </label>
+                        <div>
+                            <label
+                                htmlFor="name"
+                                className="block mb-2 text-sm font-medium text-black "
+                            >
+                                Email
+                            </label>
 
-                        <input
-                            type="name"
-                            name="name"
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="bg-gray-50 border text-black sm:text-sm rounded-lg outline-none block w-full p-2.5 "
-                            placeholder="Your Name"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-black "
-                        >
-                            Email
-                        </label>
-
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="bg-gray-50 border text-black sm:text-sm rounded-lg outline-none block w-full p-2.5 "
-                            placeholder="nome@companhia.com"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label
-                            htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-black "
-                        >
-                            Senha
-                        </label>
-                        <div className="relative">
                             <input
-                                type={showPassword ? 'text' : 'password'}
-                                name="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
-                                className="bg-gray-50 border sm:text-sm rounded-lg outline-none block w-full p-2.5 "
+                                type="name"
+                                name="name"
+                                id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="bg-gray-50 border text-black sm:text-sm rounded-lg outline-none block w-full p-2.5 "
+                                placeholder="Your Name"
                                 required
                             />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
-                            >
-                                {showPassword ? <EyeSlah /> : <Eye />}
-                            </button>
                         </div>
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                        Cadastrar
-                    </button>
-                </form>
+                        <div>
+                            <label
+                                htmlFor="email"
+                                className="block mb-2 text-sm font-medium text-black "
+                            >
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="bg-gray-50 border text-black sm:text-sm rounded-lg outline-none block w-full p-2.5 "
+                                placeholder="nome@companhia.com"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="password"
+                                className="block mb-2 text-sm font-medium text-black "
+                            >
+                                Senha
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    className="bg-gray-50 border sm:text-sm rounded-lg outline-none block w-full p-2.5 "
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white"
+                                >
+                                    {showPassword ? <EyeSlah /> : <Eye />}
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        >
+                            Cadastrar
+                        </button>
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
