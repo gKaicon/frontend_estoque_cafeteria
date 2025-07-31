@@ -56,9 +56,9 @@ export default function SellsPage() {
                   <td className="py-3 px-6 text-center">{sell.itens.length}</td>
                   <td className="py-3 px-6 text-right">R$ {Number(sell.total_value).toFixed(2)}</td>
                   <td className="py-3 px-6 text-center">
-                    <button className="text-blue-500 hover:underline">
+                    <Link href={`/sells/${sell.id}`} className="text-blue-500 hover:underline">
                       Detalhes
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))
