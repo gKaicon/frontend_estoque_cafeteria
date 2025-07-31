@@ -4,7 +4,7 @@ import api from '@/services/api';
 
 
 const RegisterPage = () => {
-
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -14,7 +14,7 @@ const RegisterPage = () => {
         e.preventDefault();
 
         try {
-            const response = await api.post('/register', { email, password });
+            const response = await api.post('/register', {name, email, password });
         } catch (err: any) {
             console.error(err);
         }
@@ -28,6 +28,26 @@ const RegisterPage = () => {
                 </h1>
 
                 <form className="space-y-6" onSubmit={handleSubmit}>
+
+                    <div>
+                        <label
+                            htmlFor="name"
+                            className="block mb-2 text-sm font-medium text-black "
+                        >
+                            Email
+                        </label>
+
+                        <input
+                            type="name"
+                            name="name"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="bg-gray-50 border text-black sm:text-sm rounded-lg outline-none block w-full p-2.5 "
+                            placeholder="Your Name"
+                            required
+                        />
+                    </div>
                     <div>
                         <label
                             htmlFor="email"
@@ -35,6 +55,7 @@ const RegisterPage = () => {
                         >
                             Email
                         </label>
+
                         <input
                             type="email"
                             name="email"
@@ -74,7 +95,12 @@ const RegisterPage = () => {
                             </button>
                         </div>
                     </div>
-
+                    <button
+                        type="submit"
+                        className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-blue-400 disabled:cursor-not-allowed dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                        Cadastrar
+                    </button>
                 </form>
             </div>
         </div>
