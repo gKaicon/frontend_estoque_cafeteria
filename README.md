@@ -4,7 +4,9 @@
 
 Interface web desenvolvida com Next.js para interagir com a API de gerenciamento da cafeteria. O projeto oferece uma experiência de usuário moderna e responsiva para gerenciar produtos, vendas e compras.
 
-**[🚀 Acesse a demonstração ao vivo](https://estoque-cafeteria.vercel.app)
+[🚀 Acesse a demonstração ao vivo](https://estoque-cafeteria.vercel.app)
+
+Use o login: admin@test.com - admin123
 
 ## ✨ Features
 
